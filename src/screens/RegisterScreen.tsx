@@ -10,32 +10,32 @@ import {
 import { authService } from '../services/auth';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { styles } from '../styles/loginStyles';
+import { styles } from '../styles/loginStyles'; // puedes crear registerStyles más adelante
 
 type RootStackParamList = {
   Login: undefined;
   Home: undefined;
-  Register: undefined;
 };
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
+  const handleRegister = async () => {
+    if (!name || !email || !password) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
     }
 
     try {
       setLoading(true);
-      const response = await authService.login({ email, password });
-      Alert.alert('Succès', `Bienvenue ${response.user?.name || ''} !`);
+      const response = await authService.register({ name, email, password });
+      Alert.alert('Succès', 'Compte créé avec succès !');
 
-      // Naviguer vers la page d'accueil
+      // Après inscription, aller à la page d'accueil ou de connexion
       navigation.reset({
         index: 0,
         routes: [{ name: 'Home' }],
@@ -43,7 +43,7 @@ export default function LoginScreen() {
     } catch (error: any) {
       Alert.alert(
         'Erreur',
-        error.response?.data?.message || 'Identifiants invalides.'
+        error.response?.data?.message || "Une erreur s'est produite."
       );
     } finally {
       setLoading(false);
@@ -52,8 +52,16 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Maurizone 🛒</Text>
-      <Text style={styles.subtitle}>Connectez-vous à votre compte</Text>
+      <Text style={styles.title}>Créer un compte 🛒</Text>
+      <Text style={styles.subtitle}>Rejoignez Maurizone dès aujourd'hui</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Nom complet"
+        value={name}
+        onChangeText={setName}
+        editable={!loading}
+      />
 
       <TextInput
         style={styles.input}
@@ -76,21 +84,19 @@ export default function LoginScreen() {
 
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={handleLogin}
+        onPress={handleRegister}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>Se connecter</Text>
+          <Text style={styles.buttonText}>S'inscrire</Text>
         )}
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.link}>Pas encore de compte ? Inscrivez-vous</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.link}>Déjà un compte ? Se connecter</Text>
       </TouchableOpacity>
-
-
     </View>
   );
 }
