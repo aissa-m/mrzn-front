@@ -11,6 +11,7 @@ export default function HomeScreen({ navigation }: any) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>🏠 Bienvenue à Maurizone</Text>
+      <Button title="Ouvrir le chat" onPress={() => navigation.navigate('Chat')} />
       <Button title="Cerrar sesión" onPress={handleLogout} />
     </View>
   );
