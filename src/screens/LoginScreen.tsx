@@ -40,6 +40,11 @@ export default function LoginScreen() {
         index: 0,
         routes: [{ name: 'Home' }],
       });
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs' }], // 👈 no a 'Home', sino a 'MainTabs'
+      });
     } catch (error: any) {
       Alert.alert(
         'Erreur',

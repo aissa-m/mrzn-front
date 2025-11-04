@@ -35,3 +35,22 @@ export interface TokenResponse {
 export interface AuthResponse extends TokenResponse {
   user?: User;
 }
+
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description?: string;
+  storeId: number;
+  ownerId: number;
+  owner?: { id: number; name: string };
+}
+
+export interface Conversation {
+  id: number;
+  storeId?: number;
+  orderId?: number;
+  createdAt: string;
+  updatedAt: string;
+}
