@@ -1,155 +1,123 @@
-// screens/ChatsListScreen.tsx
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  RefreshControl,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    FlatList,
+    StyleSheet,
+    KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
 import { socket } from '../services/socket';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'ChatsList'>;
-
-interface Conversation {
-  id: string;
-  title: string;
-  lastMessage?: string;
-  lastAt?: string; // ISO
-  unread?: number;
+interface Message {
+    id: string;
+    text: string;
+    sender: string;
 }
 
-export default function ChatsListScreen({ navigation }: Props) {
-  const [chats, setChats] = useState<Conversation[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
+export default function ChatScreen() {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState('');
 
-  const fetchChats = useCallback(() => {
-    // Pide la lista al backend por socket
-    socket.emit('chat:list');
-  }, []);
+    useEffect(() => {
+        // Conectar al socket
+        socket.connect();
 
-  useEffect(() => {
-    socket.connect();
+        // Escuchar mensajes del servidor
+        socket.on('message:new', (msg: Message) => {
+            setMessages((prev) => [...prev, msg]);
+        });
 
-    const onChatList = (list: Conversation[]) => {
-      // ordénalos por fecha del último mensaje desc
-      const sorted = [...list].sort((a, b) =>
-        (b.lastAt || '').localeCompare(a.lastAt || '')
-      );
-      setChats(sorted);
-      setRefreshing(false);
-    };
 
-    const onNewMessage = (msg: { chatId: string; text: string; at?: string }) => {
-      // Actualiza preview + unread
-      setChats(prev => {
-        const found = prev.find(c => c.id === msg.chatId);
-        if (!found) return prev; // si tu backend no manda el chat nuevo, puedes fetchChats()
-
-        const updated: Conversation = {
-          ...found,
-          lastMessage: msg.text,
-          lastAt: msg.at || new Date().toISOString(),
-          unread: (found.unread || 0) + 1,
+        return () => {
+            socket.off('message');
+            socket.disconnect();
         };
-        const rest = prev.filter(c => c.id !== msg.chatId);
-        const next = [updated, ...rest];
-        // reordenar por lastAt
-        next.sort((a, b) => (b.lastAt || '').localeCompare(a.lastAt || ''));
-        return next;
-      });
+    }, []);
+
+    const sendMessage = () => {
+        if (input.trim() === '') return;
+        const newMsg = { text: input, sender: 'Moi' };
+        socket.emit('message', { text: input });
+        setInput('');
     };
 
-    socket.on('chat:list:result', onChatList);
-    socket.on('message:new', onNewMessage);
+    return (
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+            <FlatList
+                data={messages}
+                keyExtractor={(_, i) => i.toString()}
+                renderItem={({ item }) => (
+                    <View
+                        style={[
+                            styles.messageBubble,
+                            item.sender === 'Moi' ? styles.myMessage : styles.otherMessage,
+                        ]}
+                    >
+                        <Text style={styles.messageText}>{item.text}</Text>
+                    </View>
+                )}
+            />
 
-    // primera carga
-    fetchChats();
-
-    return () => {
-      socket.off('chat:list:result', onChatList);
-      socket.off('message:new', onNewMessage);
-      socket.disconnect();
-    };
-  }, [fetchChats]);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchChats();
-  };
-
-  const openChat = (c: Conversation) => {
-    // Reinicia unread localmente (opcional)
-    setChats(prev => prev.map(x => (x.id === c.id ? { ...x, unread: 0 } : x)));
-    navigation.navigate('Chat', { chatId: c.id, title: c.title });
-  };
-
-  const renderItem = ({ item }: { item: Conversation }) => (
-    <TouchableOpacity style={styles.item} onPress={() => openChat(item)}>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
-        {!!item.lastMessage && (
-          <Text style={styles.subtitle} numberOfLines={1}>
-            {item.lastMessage}
-          </Text>
-        )}
-      </View>
-
-      <View style={styles.right}>
-        {!!item.lastAt && (
-          <Text style={styles.time}>
-            {new Date(item.lastAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </Text>
-        )}
-        {!!item.unread && item.unread > 0 && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{item.unread}</Text>
-          </View>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={chats}
-        keyExtractor={(c) => c.id}
-        renderItem={renderItem}
-        ItemSeparatorComponent={() => <View style={styles.sep} />}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={{ paddingVertical: 8 }}
-      />
-    </View>
-  );
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Écrire un message..."
+                    value={input}
+                    onChangeText={setInput}
+                />
+                <TouchableOpacity style={styles.button} onPress={sendMessage}>
+                    <Text style={styles.buttonText}>Envoyer</Text>
+                </TouchableOpacity>
+            </View>
+        </KeyboardAvoidingView>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0B0F14' },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
-  title: { color: '#E5E7EB', fontSize: 16, fontWeight: '600' },
-  subtitle: { color: '#94A3B8', marginTop: 2 },
-  right: { alignItems: 'flex-end', marginLeft: 10 },
-  time: { color: '#9CA3AF', fontSize: 12, marginBottom: 6 },
-  badge: {
-    minWidth: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: '#F43F5E',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 6,
-  },
-  badgeText: { color: '#fff', fontWeight: '700', fontSize: 12 },
-  sep: { height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginLeft: 14 },
+    container: { flex: 1, backgroundColor: '#f5f5f5', padding: 10 },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    input: {
+        flex: 1,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        marginBottom: 115,
+    },
+    button: {
+        backgroundColor: '#007AFF',
+        borderRadius: 20,
+        marginLeft: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        marginBottom: 115,
+    },
+    buttonText: { color: '#fff', fontWeight: 'bold' },
+    messageBubble: {
+        maxWidth: '75%',
+        padding: 10,
+        borderRadius: 15,
+        marginVertical: 5,
+    },
+    myMessage: {
+        backgroundColor: '#007AFF',
+        alignSelf: 'flex-end',
+    },
+    otherMessage: {
+        backgroundColor: '#e0e0e0',
+        alignSelf: 'flex-start',
+    },
+    messageText: { color: '#fff' },
 });
