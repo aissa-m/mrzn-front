@@ -36,16 +36,20 @@ export interface AuthResponse extends TokenResponse {
   user?: User;
 }
 
-
-export interface Product {
+// ==============================
+// 🏪 Producto
+// ==============================
+export type Product = {
   id: number;
   name: string;
+  description?: string | null;
   price: number;
-  description?: string;
   storeId: number;
-  ownerId: number;
-  owner?: { id: number; name: string };
-}
+  createdAt: string;
+  updatedAt: string;
+  images: string[];
+  mainImage: string | null;
+};
 
 export interface Conversation {
   id: number;

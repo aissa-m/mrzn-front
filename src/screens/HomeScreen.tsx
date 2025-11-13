@@ -1,8 +1,21 @@
+// scr/sreens/HomeScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Dimensions
+} from 'react-native';
+
 import api from '../services/api';
 import { Product } from '../types';
 import { useNavigation } from '@react-navigation/native';
+
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = (width - 60) / 2; // 👈 Dos columnas con margen
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,8 +25,7 @@ export default function HomeScreen() {
     const fetchProducts = async () => {
       try {
         const res = await api.get('/products');
-        console.log('Fetched products:', res.data);
-        setProducts(res.data.items); // ✅ usa el array "items"
+        setProducts(res.data.items);
       } catch (error) {
         console.error('Error fetching products', error);
       }
@@ -26,34 +38,60 @@ export default function HomeScreen() {
       style={styles.card}
       onPress={() => navigation.navigate('ProductDetail', { product: item })}
     >
-      <Text style={styles.title}>{item.name}</Text>
-      <Text style={styles.price}>
-        {parseFloat(item.price?.d?.[0] || 0).toFixed(2)} MRU
+      {/* 👇 Imagen */}
+      <Image
+        source={{
+          uri: item.mainImage || item.images?.[0] || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmiqR_gB1aE6SmGpJvgdi6j6MZYtLpcSittA&s'
+        }}
+        style={styles.image}
+      />
+
+      {/* Nombre */}
+      <Text style={styles.title} numberOfLines={1}>
+        {item.name}
       </Text>
+
+      {/* Precio */}
+      <Text style={styles.price}>{item.price.toFixed(2)} MRU</Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Produits récents 🛍️</Text>
+
       <FlatList
         data={products}
         renderItem={renderItem}
         keyExtractor={(p) => p.id.toString()}
+        numColumns={2}                   // 👈 GRID DE 2 COLUMNAS
+        columnWrapperStyle={{ gap: 10 }} // separación horizontal
+        contentContainerStyle={{ gap: 10 }}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '', marginTop: 35 },
+  container: { flex: 1, padding: 20, marginTop: 35 },
   header: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
+
   card: {
-    backgroundColor: '#f9f9f9',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 10,
+    width: CARD_WIDTH,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 10,
+    elevation: 3,
   },
-  title: { fontSize: 18, fontWeight: '600' },
-  price: { fontSize: 16, color: '#007AFF' },
+
+  image: {
+    width: '100%',
+    height: 130,
+    borderRadius: 10,
+    marginBottom: 8,
+    backgroundColor: '#eee',
+  },
+
+  title: { fontSize: 16, fontWeight: '500' },
+  price: { fontSize: 16, color: '#007AFF', fontWeight: 'bold', marginTop: 4 },
 });

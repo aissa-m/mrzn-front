@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 // Screens
 import ChatsListScreen from '../screens/ChatsListScreen';
-import ChatScreen from '../screens/ChatScreen'; // tu pantalla individual (la que ya tienes)
+import ChatScreen from '../screens/ChatScreen'; 
 
 export default function AppNavigator() {
   return (
