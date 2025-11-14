@@ -17,8 +17,10 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Inscription' }} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Inicio' }} />
         <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat' }} />
-        <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
-         {/* Área principal tras login */}
+        <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{
+          title: 'Détails du produit', // 👈 cambia el título aquí
+        }} />
+        {/* Área principal tras login */}
         <Stack.Screen
           name="MainTabs"
           component={MainTabs}
