@@ -15,7 +15,7 @@ import { Product } from '../types';
 import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 60) / 2; // 👈 Dos columnas con margen
+const CARD_WIDTH = (width - 50) / 2; // 👈 Dos columnas con margen
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -64,9 +64,11 @@ export default function HomeScreen() {
         data={products}
         renderItem={renderItem}
         keyExtractor={(p) => p.id.toString()}
-        numColumns={2}                   // 👈 GRID DE 2 COLUMNAS
-        columnWrapperStyle={{ gap: 10 }} // separación horizontal
+        numColumns={2}
+        columnWrapperStyle={{ gap: 10 }}
         contentContainerStyle={{ gap: 10 }}
+        showsVerticalScrollIndicator={false}
+
       />
     </View>
   );

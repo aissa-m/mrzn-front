@@ -82,4 +82,11 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
   },
+  avatarImage: {        
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    marginRight: 12,
+  },
+
 });

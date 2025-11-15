@@ -7,7 +7,8 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'USER' | 'STORE_OWNER' | 'ADMIN'; // puedes ampliar más adelante
+  role: 'USER' | 'STORE_OWNER' | 'ADMIN';
+  avatarUrl?: string | null;
 }
 
 // ==============================
