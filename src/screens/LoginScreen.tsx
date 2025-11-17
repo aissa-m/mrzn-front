@@ -11,15 +11,18 @@ import { authService } from '../services/auth';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { styles } from '../styles/loginStyles';
-
-type RootStackParamList = {
-  Login: undefined;
-  Home: undefined;
-  Register: undefined;
-};
+import { useAuth } from '../hooks/useAuth';
+import api from '../services/api';
+import { RootStackParamList } from '../types/navigation';
+import { useTranslation } from "react-i18next";
 
 export default function LoginScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { t } = useTranslation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const { setUser } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,19 +35,28 @@ export default function LoginScreen() {
 
     try {
       setLoading(true);
-      const response = await authService.login({ email, password });
-      Alert.alert('Succès', `Bienvenue ${response.user?.name || ''} !`);
 
-      // Naviguer vers la page d'accueil
+      // 1) Login → guarda token internamente
+      await authService.login({ email, password });
+
+      // 2) Obtener usuario actual del backend
+      const meResp = await api.get('/users/me');
+      const user = meResp.data;
+
+      if (!user) {
+        Alert.alert('Erreur', 'Impossible de charger l’utilisateur.');
+        return;
+      }
+
+      // 3) Guardar en AuthContext
+      setUser(user);
+
+      // 4) Navegar al tab principal
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Home' }],
+        routes: [{ name: 'MainTabs' }],
       });
 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'MainTabs' }], // 👈 no a 'Home', sino a 'MainTabs'
-      });
     } catch (error: any) {
       Alert.alert(
         'Erreur',
@@ -62,7 +74,7 @@ export default function LoginScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Adresse e-mail"
+        placeholder={t("auth.email")}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -72,7 +84,7 @@ export default function LoginScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
+        placeholder={t("auth.password")}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -92,10 +104,8 @@ export default function LoginScreen() {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.link}>Pas encore de compte ? Inscrivez-vous</Text>
+        <Text style={styles.link}>{t("auth.goRegister")}</Text>
       </TouchableOpacity>
-
-
     </View>
   );
 }

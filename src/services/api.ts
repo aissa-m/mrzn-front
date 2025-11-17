@@ -49,5 +49,7 @@ api.interceptors.response.use(
   }
 );
 
-export { API_BASE, API_URL };
+export const API_BASE_URL = API_BASE;
+export const API_URL_API = API_URL;
+
 export default api;

@@ -1,52 +1,52 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f6f7f9',
+    backgroundColor: "#f6f7f9",
     padding: 20,
   },
   header: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 16,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
-    marginTop: 35 
+    marginTop: 35,
   },
   avatar: {
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: '#007AFF20',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#007AFF20",
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatarText: {
     fontSize: 24,
-    fontWeight: '700',
-    color: '#007AFF',
+    fontWeight: "700",
+    color: "#007AFF",
   },
   name: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#111',
+    fontWeight: "700",
+    color: "#111",
   },
   email: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 4,
   },
   role: {
     marginTop: 4,
     fontSize: 13,
-    color: '#007AFF',
-    fontWeight: '600',
+    color: "#007AFF",
+    fontWeight: "600",
   },
   section: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
@@ -56,37 +56,48 @@ export const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   itemText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#222',
+    fontWeight: "600",
+    color: "#222",
   },
   itemHint: {
     fontSize: 13,
-    color: '#888',
+    color: "#888",
     marginTop: 4,
   },
   footer: {
-    marginTop: 'auto',
+    marginTop: "auto",
   },
   logoutBtn: {
-    backgroundColor: '#ff3b30',
+    backgroundColor: "#ff3b30",
     paddingVertical: 14,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   logoutText: {
-    color: '#fff',
-    fontWeight: '700',
+    color: "#fff",
+    fontWeight: "700",
     fontSize: 16,
   },
-  avatarImage: {        
+  avatarImage: {
     width: 72,
     height: 72,
     borderRadius: 36,
     marginRight: 12,
   },
 
+  // en src/styles/profileStyles.ts
+  langBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+  },
+  langBtnText: {
+    fontSize: 13,
+  },
 });

@@ -10,12 +10,7 @@ import {
     Platform,
 } from 'react-native';
 import { socket } from '../services/socket';
-
-interface Message {
-    id: string;
-    text: string;
-    sender: string;
-}
+import { Message } from '../types/models';
 
 export default function ChatScreen() {
     const [messages, setMessages] = useState<Message[]>([]);

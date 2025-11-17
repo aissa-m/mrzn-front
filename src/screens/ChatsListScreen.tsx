@@ -9,18 +9,12 @@ import {
   RefreshControl,
 } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootStackParamList } from '../types/navigation';
 import { socket } from '../services/socket';
+import type { Conversation } from '../types/models';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChatsList'>;
 
-interface Conversation {
-  id: string;
-  title: string;
-  lastMessage?: string;
-  lastAt?: string; // ISO
-  unread?: number;
-}
 
 export default function ChatsListScreen({ navigation }: Props) {
   const [chats, setChats] = useState<Conversation[]>([]);

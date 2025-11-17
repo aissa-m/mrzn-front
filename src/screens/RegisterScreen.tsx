@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// src/screens/RegisterScreen.tsx
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,44 +7,53 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import { authService } from '../services/auth';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { styles } from '../styles/loginStyles'; // puedes crear registerStyles más adelante
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-type RootStackParamList = {
-  Login: undefined;
-  Home: undefined;
-};
+import { authService } from "../services/auth";
+import { styles } from "../styles/loginStyles";
+import { RootStackParamList } from "../types/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { t } = useTranslation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
     if (!name || !email || !password) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+      Alert.alert(
+        t("common.error"),
+        t("auth.fillAllFields", "Veuillez remplir tous les champs.")
+      );
       return;
     }
 
     try {
       setLoading(true);
-      const response = await authService.register({ name, email, password });
-      Alert.alert('Succès', 'Compte créé avec succès !');
+      await authService.register({ name, email, password });
 
-      // Après inscription, aller à la page d'accueil ou de connexion
+      Alert.alert(
+        t("auth.registerTitle"),
+        t("auth.registerSuccess", "Compte créé avec succès !")
+      );
+
+      // Après inscription, aller à la zone principale (tabs)
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Home' }],
+        routes: [{ name: "MainTabs" }],
       });
     } catch (error: any) {
       Alert.alert(
-        'Erreur',
-        error.response?.data?.message || "Une erreur s'est produite."
+        t("common.error"),
+        error?.response?.data?.message ||
+          t("auth.genericError", "Une erreur s'est produite.")
       );
     } finally {
       setLoading(false);
@@ -52,12 +62,17 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Créer un compte 🛒</Text>
-      <Text style={styles.subtitle}>Rejoignez Maurizone dès aujourd'hui</Text>
+      <Text style={styles.title}>{t("auth.registerTitle")} 🛒</Text>
+      <Text style={styles.subtitle}>
+        {t(
+          "auth.registerSubtitle",
+          "Rejoignez Maurizone dès aujourd'hui"
+        )}
+      </Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Nom complet"
+        placeholder={t("auth.name")}
         value={name}
         onChangeText={setName}
         editable={!loading}
@@ -65,7 +80,7 @@ export default function RegisterScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Adresse e-mail"
+        placeholder={t("auth.email")}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -75,7 +90,7 @@ export default function RegisterScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
+        placeholder={t("auth.password")}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -90,12 +105,14 @@ export default function RegisterScreen() {
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>S'inscrire</Text>
+          <Text style={styles.buttonText}>{t("auth.registerButton")}</Text>
         )}
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.link}>Déjà un compte ? Se connecter</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <Text style={styles.link}>
+          {t("auth.haveAccount")} {t("auth.goLogin")}
+        </Text>
       </TouchableOpacity>
     </View>
   );

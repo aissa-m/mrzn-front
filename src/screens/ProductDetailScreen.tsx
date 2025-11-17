@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// src/screens/ProductDetailScreen.tsx
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,45 +9,51 @@ import {
   Image,
   ScrollView,
   Dimensions,
-} from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { Product } from '../types';
-import { chatService } from '../services/chat';
+} from "react-native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
-type RootStackParamList = {
-  ProductDetail: { product: Product };
-};
+import { Product, RootStackParamList } from "../types";
+import { chatService } from "../services/chat";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const IMAGE_HEIGHT = width * 0.8;
 const PLACEHOLDER =
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmiqR_gB1aE6SmGpJvgdi6j6MZYtLpcSittA&s';
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmiqR_gB1aE6SmGpJvgdi6j6MZYtLpcSittA&s";
 
 export default function ProductDetailScreen() {
   const navigation = useNavigation<any>();
-  const route = useRoute<RouteProp<RootStackParamList, 'ProductDetail'>>();
+  const route = useRoute<RouteProp<RootStackParamList, "ProductDetail">>();
+  const { t } = useTranslation();
+
   const { product } = route.params;
 
-  const allImages = product.images && product.images.length > 0
-    ? product.images
-    : [product.mainImage || PLACEHOLDER];
+  const allImages =
+    product.images && product.images.length > 0
+      ? product.images
+      : [product.mainImage || PLACEHOLDER];
 
   const [currentImage, setCurrentImage] = useState(
-    product.mainImage || allImages[0] || PLACEHOLDER,
+    product.mainImage || allImages[0] || PLACEHOLDER
   );
 
   const handleChat = async () => {
     try {
       const convo = await chatService.openConversation(
-        (product as any).ownerId, // si lo tienes en el tipo, pon ownerId directamente
-        product.storeId,
+        (product as any).ownerId, // TODO: pon ownerId en el tipo Product cuando lo tengas
+        product.storeId
       );
-      navigation.navigate('Chat', { conversationId: convo.id });
+
+      // 👇 usamos la firma del stack: Chat: { chatId: string; title?: string }
+      navigation.navigate("Chat", {
+        chatId: String(convo.id),
+        title: product.name,
+      });
     } catch (err: any) {
       console.error(err);
       Alert.alert(
-        'Erreur',
-        err.response?.data?.message || "Impossible d’ouvrir la conversation.",
+        t("common.error"),
+        err?.response?.data?.message || t("chat.errorOpen")
       );
     }
   };
@@ -69,17 +76,14 @@ export default function ProductDetailScreen() {
             style={styles.thumbRow}
           >
             {allImages.map((img, idx) => (
-              <TouchableOpacity
-                key={idx}
-                onPress={() => setCurrentImage(img)}
-              >
-                <Image
-                  source={{ uri: img }}
-                  style={[
-                    styles.thumb,
-                    img === currentImage && styles.thumbActive,
-                  ]}
-                />
+              <TouchableOpacity key={idx} onPress={() => setCurrentImage(img)}>
+              <Image
+                source={{ uri: img }}
+                style={[
+                  styles.thumb,
+                  img === currentImage && styles.thumbActive,
+                ]}
+              />
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -88,114 +92,143 @@ export default function ProductDetailScreen() {
         {/* Info producto */}
         <View style={styles.infoBox}>
           <Text style={styles.name}>{product.name}</Text>
-          <Text style={styles.price}>{product.price.toFixed(2)} MRU</Text>
+          <Text style={styles.price}>
+            {product.price.toFixed(2)} MRU
+          </Text>
 
           {product.description ? (
             <Text style={styles.desc}>{product.description}</Text>
           ) : (
             <Text style={styles.descMuted}>
-              Aucune description fournie par le vendeur.
+              {t("productDetail.noDescription")}
             </Text>
           )}
         </View>
 
         {/* Info vendedor (placeholder por ahora) */}
         <View style={styles.sellerBox}>
-          <Text style={styles.sellerLabel}>Vendeur</Text>
-          <Text style={styles.sellerName}>
-            Boutique #{product.storeId}
+          <Text style={styles.sellerLabel}>
+            {t("productDetail.sellerLabel")}
           </Text>
+          <Text style={styles.sellerName}>Boutique #{product.storeId}</Text>
           <Text style={styles.sellerHint}>
-            Voir le profil de la boutique et ses autres produits bientôt 👀
+            {t("productDetail.sellerHint")}
           </Text>
         </View>
 
         <View style={{ height: 90 }} />
       </ScrollView>
 
-      {/* CTA fijo abajo, como Vinted/Wallapop */}
+      {/* CTA fijo abajo, tipo Vinted/Wallapop */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.chatButton} onPress={handleChat}>
-          <Text style={styles.chatButtonText}>Contacter le vendeur 💬</Text>
+          <Text style={styles.chatButtonText}>
+            {t("productDetail.contactSeller")} 💬
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
+// 🎨 ESTILOS
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5' },
-
+  container: {
+    flex: 1,
+    backgroundColor: "#f9fafb",
+  },
   scrollContent: {
-    paddingBottom: 20,
+    padding: 16,
   },
-
   mainImage: {
-    width: '100%',
+    width: "100%",
     height: IMAGE_HEIGHT,
-    backgroundColor: '#eee',
+    borderRadius: 12,
+    backgroundColor: "#e5e7eb",
   },
-
   thumbRow: {
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    marginTop: 8,
   },
   thumb: {
     width: 70,
     height: 70,
-    borderRadius: 10,
+    borderRadius: 8,
     marginRight: 8,
-    backgroundColor: '#ddd',
+    backgroundColor: "#e5e7eb",
   },
   thumbActive: {
     borderWidth: 2,
-    borderColor: '#007AFF',
+    borderColor: "#007AFF",
   },
-
   infoBox: {
-    backgroundColor: '#fff',
-    marginHorizontal: 12,
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    elevation: 2,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#16a34a",
+    marginBottom: 8,
+  },
+  desc: {
+    fontSize: 14,
+    color: "#374151",
     marginTop: 4,
-    borderRadius: 12,
-    padding: 16,
-    elevation: 2,
   },
-  name: { fontSize: 22, fontWeight: 'bold', marginBottom: 6 },
-  price: { fontSize: 20, fontWeight: '700', color: '#007AFF', marginBottom: 10 },
-  desc: { fontSize: 16, color: '#444', lineHeight: 22 },
-  descMuted: { fontSize: 15, color: '#888', fontStyle: 'italic' },
-
+  descMuted: {
+    fontSize: 14,
+    color: "#9ca3af",
+    marginTop: 4,
+  },
   sellerBox: {
-    backgroundColor: '#fff',
-    marginHorizontal: 12,
-    marginTop: 10,
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: "#fff",
     borderRadius: 12,
-    padding: 16,
     elevation: 2,
   },
-  sellerLabel: { fontSize: 14, color: '#888', marginBottom: 4 },
-  sellerName: { fontSize: 16, fontWeight: '600', marginBottom: 4 },
-  sellerHint: { fontSize: 14, color: '#666' },
-
+  sellerLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#6b7280",
+  },
+  sellerName: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 4,
+  },
+  sellerHint: {
+    fontSize: 13,
+    color: "#6b7280",
+    marginTop: 4,
+  },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
     padding: 12,
-    backgroundColor: '#ffffffee',
+    backgroundColor: "#ffffffee",
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    borderTopColor: "#e5e7eb",
   },
   chatButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 14,
+    backgroundColor: "#007AFF",
+    paddingVertical: 12,
     borderRadius: 999,
-    alignItems: 'center',
+    alignItems: "center",
   },
   chatButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
