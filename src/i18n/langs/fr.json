@@ -1,0 +1,126 @@
+{
+  "common": {
+    "loading": "Chargement…",
+    "error": "Une erreur s’est produite",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer"
+  },
+
+  "tabs": {
+    "home": "Accueil",
+    "messages": "Messages",
+    "add": "Ajouter",
+    "profile": "Profil",
+    "cart": "Panier",
+    "myProducts": "Mes produits"
+  },
+
+  "auth": {
+    "loginTitle": "Connexion",
+    "registerTitle": "Inscription",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "name": "Nom complet",
+
+    "loginButton": "Se connecter",
+    "registerButton": "Créer un compte",
+
+    "noAccount": "Pas de compte ?",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "goRegister": "Créer un compte",
+    "goLogin": "Se connecter",
+
+    "fillAllFields": "Veuillez remplir tous les champs.",
+    "registerSuccess": "Compte créé avec succès !",
+    "genericError": "Une erreur s'est produite."
+  },
+
+  "home": {
+    "title": "Produits",
+    "empty": "Aucun produit disponible pour le moment.",
+    "seeDetails": "Voir les détails"
+  },
+
+  "productDetail": {
+    "title": "Détails du produit",
+    "price": "Prix",
+    "description": "Description",
+    "store": "Boutique",
+    "noDescription": "Aucune description fournie par le vendeur.",
+    "sellerLabel": "Vendeur",
+    "sellerHint": "Voir le profil de la boutique et ses autres produits bientôt 👀",
+    "contactSeller": "Contacter le vendeur"
+  },
+
+  "addProduct": {
+    "title": "Ajouter un produit",
+    "namePlaceholder": "Nom du produit",
+    "descriptionPlaceholder": "Description",
+    "pricePlaceholder": "Prix (ex: 9.99)",
+    "selectImages": "Sélectionner des images",
+    "selectImagesWithCount": "Sélectionner des images ({{count}})",
+    "createBtn": "Créer le produit",
+
+    "success": "Produit créé avec succès.",
+    "errorCreate": "Impossible de créer le produit.",
+    "needNamePrice": "Nom et prix sont obligatoires.",
+    "needImage": "Veuillez sélectionner au moins une image."
+  },
+
+  "profile": {
+    "loading": "Chargement du profil…",
+    "defaultName": "Utilisateur Maurizone",
+
+    "editProfile": "Modifier le profil",
+    "editProfileHint": "Nom, e-mail…",
+
+    "preferences": "Préférences",
+    "preferencesHint": "Langue, notifications…",
+
+    "myProducts": "Mes produits",
+    "myProductsHint": "Voir, modifier et supprimer vos produits",
+
+    "logout": "Se déconnecter",
+
+    "language": "Langue",
+    "languageHint": "Choisissez la langue de l'application",
+    "lang_fr": "Français",
+    "lang_en": "Anglais",
+    "lang_ar": "Arabe"
+  },
+
+  "roles": {
+    "buyer": "Acheteur",
+    "seller": "Vendeur",
+    "admin": "Admin"
+  },
+
+  "avatar": {
+    "permissionDenied": "Permission refusée",
+    "permissionExplain": "Autorisez l’accès à la galerie.",
+    "updated": "Photo de profil mise à jour.",
+    "updateError": "Impossible de mettre à jour l'avatar."
+  },
+
+  "myProducts": {
+    "title": "Mes produits",
+    "info": "Cette section sera disponible lorsque votre boutique sera créée."
+  },
+
+  "chat": {
+    "listTitle": "Mes messages",
+    "emptyConversations": "Vous n’avez pas encore de conversations.",
+    "openChat": "Ouvrir le chat",
+    "send": "Envoyer",
+    "errorOpen": "Impossible d’ouvrir la conversation pour le moment."
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide.",
+    "total": "Total",
+    "checkout": "Passer la commande",
+    "clear": "Vider le panier",
+    "remove": "Retirer"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+
+  "tabs": {
+    "home": "Home",
+    "messages": "Messages",
+    "add": "Add",
+    "profile": "Profile",
+    "cart": "Cart",
+    "myProducts": "My products"
+  },
+
+  "auth": {
+    "loginTitle": "Login",
+    "registerTitle": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full name",
+
+    "loginButton": "Log in",
+    "registerButton": "Create account",
+
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "goRegister": "Create an account",
+    "goLogin": "Log in",
+
+    "fillAllFields": "Please fill in all fields.",
+    "registerSuccess": "Account created successfully!",
+    "genericError": "An error occurred."
+  },
+
+  "home": {
+    "title": "Products",
+    "empty": "No products available yet.",
+    "seeDetails": "See details"
+  },
+
+  "productDetail": {
+    "title": "Product details",
+    "price": "Price",
+    "description": "Description",
+    "store": "Store",
+    "noDescription": "No description provided by the seller.",
+    "sellerLabel": "Seller",
+    "sellerHint": "Store profile and other products available soon 👀",
+    "contactSeller": "Contact the seller"
+  },
+
+  "addProduct": {
+    "title": "Add a product",
+    "namePlaceholder": "Product name",
+    "descriptionPlaceholder": "Description",
+    "pricePlaceholder": "Price (e.g. 9.99)",
+    "selectImages": "Select images",
+    "selectImagesWithCount": "Select images ({{count}})",
+    "createBtn": "Create product",
+
+    "success": "Product created successfully.",
+    "errorCreate": "Could not create product.",
+    "needNamePrice": "Name and price are required.",
+    "needImage": "Please select at least one image."
+  },
+
+  "profile": {
+    "loading": "Loading profile…",
+    "defaultName": "Maurizone user",
+
+    "editProfile": "Edit profile",
+    "editProfileHint": "Name, e-mail…",
+
+    "preferences": "Preferences",
+    "preferencesHint": "Language, notifications…",
+
+    "myProducts": "My products",
+    "myProductsHint": "View, edit and delete your products",
+
+    "logout": "Log out",
+
+    "language": "Language",
+    "languageHint": "Choose the app language",
+    "lang_fr": "French",
+    "lang_en": "English",
+    "lang_ar": "Arabic"
+  },
+
+  "roles": {
+    "buyer": "Buyer",
+    "seller": "Seller",
+    "admin": "Admin"
+  },
+
+  "avatar": {
+    "permissionDenied": "Permission denied",
+    "permissionExplain": "Allow gallery access.",
+    "updated": "Profile photo updated.",
+    "updateError": "Could not update avatar."
+  },
+
+  "myProducts": {
+    "title": "My products",
+    "info": "This section will be available once your store has been created."
+  },
+
+  "chat": {
+    "listTitle": "My messages",
+    "emptyConversations": "You don't have any conversations yet.",
+    "openChat": "Open chat",
+    "send": "Send",
+    "errorOpen": "Unable to open the conversation at the moment."
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "total": "Total",
+    "checkout": "Checkout",
+    "clear": "Clear cart",
+    "remove": "Remove"
+  }
+}

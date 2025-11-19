@@ -25,7 +25,10 @@ export type RootStackParamList = {
 // Bottom tabs (MainTabs)
 export type MainTabsParamList = {
   Home: undefined;
-  Messages: undefined;
+  Cart: undefined;        // 👈 nueva
+  MyProducts: undefined;  // 👈 nueva
   AddProduct: undefined;
+  Messages: undefined;
   Profile: undefined;
 };
+

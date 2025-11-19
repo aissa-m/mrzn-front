@@ -7,6 +7,8 @@ import HomeScreen from "../screens/HomeScreen";
 import ChatScreen from "../screens/ChatScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AddProductScreen from "../screens/AddProductScreen";
+import MyProductsScreen from "../screens/MyProductsScreen";
+import CartScreen from "../screens/CartScreen";
 
 import { useAuth } from "../hooks/useAuth";
 import { useTranslation } from "react-i18next";
@@ -18,8 +20,10 @@ export default function MainTabs() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const canCreateProduct =
+  const isOwnerOrAdmin =
     user && (user.role === "STORE_OWNER" || user.role === "ADMIN");
+
+  const isBuyer = user && user.role === "USER";
 
   return (
     <Tab.Navigator
@@ -41,6 +45,12 @@ export default function MainTabs() {
             case "Home":
               iconName = "home";
               break;
+            case "Cart":
+              iconName = "cart";
+              break;
+            case "MyProducts":
+              iconName = "pricetag";
+              break;
             case "Messages":
               iconName = "chatbubbles";
               break;
@@ -52,14 +62,13 @@ export default function MainTabs() {
               break;
           }
 
-          // Hacemos el + un poco más grande
           const finalSize = route.name === "AddProduct" ? size + 8 : size;
 
           return <Ionicons name={iconName} color={color} size={finalSize} />;
         },
       })}
     >
-      {/* HOME */}
+      {/* HOME – todos los roles */}
       <Tab.Screen
         name="Home"
         component={HomeScreen}
@@ -68,20 +77,42 @@ export default function MainTabs() {
         }}
       />
 
-      {/* ADD PRODUCT - solo OWNER / ADMIN */}
-      {canCreateProduct && (
+      {/* CART – solo usuarios compradores (ROLE: USER) */}
+      {isBuyer && (
+        <Tab.Screen
+          name="Cart"
+          // TODO: crea CartScreen y cámbialo aquí
+          component={CartScreen}
+          options={{
+            title: t("tabs.cart"),
+          }}
+        />
+      )}
+
+      {/* MY PRODUCTS – solo STORE_OWNER / ADMIN */}
+      {isOwnerOrAdmin && (
+        <Tab.Screen
+          name="MyProducts"
+          component={MyProductsScreen}
+          options={{
+            title: t("tabs.myProducts"),
+          }}
+        />
+      )}
+
+      {/* ADD PRODUCT – solo STORE_OWNER / ADMIN */}
+      {isOwnerOrAdmin && (
         <Tab.Screen
           name="AddProduct"
           component={AddProductScreen}
           options={{
-            // No label debajo del icono
             tabBarLabel: "",
             title: t("tabs.add"),
           }}
         />
       )}
 
-      {/* MESSAGES */}
+      {/* MESSAGES – todos */}
       <Tab.Screen
         name="Messages"
         component={ChatScreen}
@@ -90,7 +121,7 @@ export default function MainTabs() {
         }}
       />
 
-      {/* PROFILE */}
+      {/* PROFILE – todos */}
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
