@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   MainTabs: undefined;
+  CreateStore: undefined;
 
   // Productos
   // ProductDetail: { productId: number };
@@ -30,5 +31,6 @@ export type MainTabsParamList = {
   AddProduct: undefined;
   Messages: undefined;
   Profile: undefined;
+  // CreateStore: undefined;
 };
 

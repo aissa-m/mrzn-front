@@ -17,6 +17,8 @@ import ChatsListScreen from "../screens/ChatsListScreen";
 import ChatScreen from "../screens/ChatScreen";
 
 import { RootStackParamList } from "../types/navigation";
+// Stores
+import CreateStoreScreen from "../screens/CreateStoreScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -78,6 +80,12 @@ export default function AppNavigator() {
         name="AddProduct"
         component={AddProductScreen}
         options={{ title: t("addProduct.title") }}
+      />
+
+      <Stack.Screen
+        name="CreateStore"
+        component={CreateStoreScreen}
+        options={{ title: "Create store" }} // el título lo manejas luego con i18n si quieres
       />
     </Stack.Navigator>
   );

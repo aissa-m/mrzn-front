@@ -19,6 +19,7 @@
   "auth": {
     "loginTitle": "Connexion",
     "registerTitle": "Inscription",
+    "registerSubtitle": "Rejoignez Maurizone dès aujourd'hui",
     "email": "E-mail",
     "password": "Mot de passe",
     "name": "Nom complet",
@@ -87,7 +88,13 @@
     "languageHint": "Choisissez la langue de l'application",
     "lang_fr": "Français",
     "lang_en": "Anglais",
-    "lang_ar": "Arabe"
+    "lang_ar": "Arabe",
+
+    "storeTitle": "Votre boutique",
+    "selectedStore": "Boutique sélectionnée :",
+    "storeSelected": "sélectionnée",
+    "noStores": "Vous n’avez pas encore de boutique.",
+    "createFirstStore": "Créez votre première boutique"
   },
 
   "roles": {
@@ -122,5 +129,21 @@
     "checkout": "Passer la commande",
     "clear": "Vider le panier",
     "remove": "Retirer"
+  },
+  "store": {
+    "manageTitle": "Gérer vos boutiques",
+    "manageSubtitle": "Consultez vos boutiques et ajoutez-en de nouvelles.",
+    "yourStores": "Vos boutiques",
+    "openCreateModal": "Ajouter une boutique",
+    "createTitle": "Créer une boutique",
+    "createSubtitle": "Ajoutez une nouvelle boutique à votre compte.",
+    "namePlaceholder": "Nom de la boutique",
+    "createdTitle": "Boutique créée",
+    "createdMessage": "Votre boutique a été créée avec succès.",
+    "createError": "Impossible de créer la boutique.",
+    "fillName": "Veuillez saisir un nom.",
+    "onlyOwner": "Seuls les vendeurs peuvent créer des boutiques.",
+    "noStores": "Vous n’avez pas encore de boutique.",
+    "createButton": "Créer la boutique"
   }
 }

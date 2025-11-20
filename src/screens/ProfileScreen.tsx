@@ -11,7 +11,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"; // 👈
-import i18n from "../i18n"; // 👈 crea un pequeño re-export, ver comentario abajo
+import i18n from "../i18n";
 
 import api from "../services/api";
 import { API_BASE } from "@env";
@@ -39,6 +39,7 @@ export default function ProfileScreen() {
 
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [selectedStore, setSelectedStore] = useState<any | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -62,6 +63,14 @@ export default function ProfileScreen() {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    // si ya hay user y tiene tiendas, escogemos la primera por defecto
+    const stores = (user as any)?.stores || [];
+    if (stores.length > 0 && !selectedStore) {
+      setSelectedStore(stores[0]);
+    }
+  }, [user, selectedStore]);
 
   const initials =
     (user?.name || "")
@@ -220,10 +229,57 @@ export default function ProfileScreen() {
             onPress={() => navigation.navigate("MyProducts")}
           >
             <Text style={styles.itemText}>{t("profile.myProducts")}</Text>
-            <Text style={styles.itemHint}>
-              {t("profile.myProductsHint")}
-            </Text>
+            <Text style={styles.itemHint}>{t("profile.myProductsHint")}</Text>
           </TouchableOpacity>
+        )}
+        {/* Store management for STORE_OWNER */}
+        {user?.role === "STORE_OWNER" && (
+          <View style={styles.item}>
+            <Text style={styles.itemText}>{t("profile.storeTitle")}</Text>
+
+            {Array.isArray((user as any).stores) &&
+            (user as any).stores.length > 0 ? (
+              <>
+                <Text style={styles.itemHint}>
+                  {t("profile.selectedStore")} {selectedStore?.name || "—"}
+                </Text>
+
+                {(user as any).stores.map((store: any) => (
+                  <TouchableOpacity
+                    key={store.id}
+                    style={{ marginTop: 8 }}
+                    onPress={() => setSelectedStore(store)}
+                  >
+                    <Text
+                      style={{
+                        fontWeight:
+                          selectedStore?.id === store.id ? "bold" : "normal",
+                      }}
+                    >
+                      {store.name}{" "}
+                      {selectedStore?.id === store.id
+                        ? ` (${t("profile.storeSelected")})`
+                        : ""}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </>
+            ) : (
+              <>
+                <Text style={styles.itemHint}>{t("profile.noStores")}</Text>
+              </>
+            )}
+
+            {/* botón siempre disponible para ir a la pantalla de gestión */}
+            <TouchableOpacity
+              style={{ marginTop: 12 }}
+              onPress={() => navigation.navigate("CreateStore")}
+            >
+              <Text style={{ color: "#007AFF" }}>
+                {t("store.manageTitle")}
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
 

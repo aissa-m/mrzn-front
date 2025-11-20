@@ -19,6 +19,7 @@
   "auth": {
     "loginTitle": "Login",
     "registerTitle": "Sign up",
+    "registerSubtitle": "Join Maurizone today",
     "email": "Email",
     "password": "Password",
     "name": "Full name",
@@ -87,7 +88,13 @@
     "languageHint": "Choose the app language",
     "lang_fr": "French",
     "lang_en": "English",
-    "lang_ar": "Arabic"
+    "lang_ar": "Arabic",
+
+    "storeTitle": "Your store",
+    "selectedStore": "Selected store:",
+    "storeSelected": "selected",
+    "noStores": "You don't have any store yet.",
+    "createFirstStore": "Create your first store"
   },
 
   "roles": {
@@ -122,5 +129,21 @@
     "checkout": "Checkout",
     "clear": "Clear cart",
     "remove": "Remove"
+  },
+  "store": {
+    "manageTitle": "Manage your stores",
+    "manageSubtitle": "View your stores and add new ones.",
+    "yourStores": "Your stores",
+    "openCreateModal": "Add a store",
+    "createTitle": "Create a store",
+    "createSubtitle": "Add a new store to your account.",
+    "namePlaceholder": "Store name",
+    "createdTitle": "Store created",
+    "createdMessage": "Your store was successfully created.",
+    "createError": "Could not create the store.",
+    "fillName": "Please enter a name.",
+    "onlyOwner": "Only sellers can create stores.",
+    "noStores": "You don’t have any store yet.",
+    "createButton": "Create store"
   }
 }

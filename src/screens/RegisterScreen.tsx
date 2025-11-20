@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -15,6 +16,9 @@ import { authService } from "../services/auth";
 import { styles } from "../styles/loginStyles";
 import { RootStackParamList } from "../types/navigation";
 import { useTranslation } from "react-i18next";
+import Logo from "../../assets/logo_n.png";
+
+
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
@@ -62,13 +66,10 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
+      <Image source={Logo} style={styles.logo} resizeMode="contain" />
+
       <Text style={styles.title}>{t("auth.registerTitle")} 🛒</Text>
-      <Text style={styles.subtitle}>
-        {t(
-          "auth.registerSubtitle",
-          "Rejoignez Maurizone dès aujourd'hui"
-        )}
-      </Text>
+      <Text style={styles.subtitle}>{t("auth.registerSubtitle")}</Text>
 
       <TextInput
         style={styles.input}

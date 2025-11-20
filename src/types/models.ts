@@ -3,13 +3,31 @@
 // ==============================
 // 👤 Usuario
 // ==============================
+
+export type Role = 'USER' | 'STORE_OWNER' | 'ADMIN';
+
+export interface Store {
+  id: number;
+  name: string;
+  ownerId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface User {
+  avatarUrl: any;
   id: number;
   name: string;
   email: string;
-  role: "USER" | "STORE_OWNER" | "ADMIN";
-  avatarUrl?: string | null;
+  role: Role;
+  stores?: Store[]; // 👈 clave para los owners
 }
+
+export interface LoginResponse {
+  access_token: string;
+  user: User;
+}
+
 
 // ==============================
 // 🔐 Login / Register DTOs

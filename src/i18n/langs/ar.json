@@ -19,6 +19,7 @@
   "auth": {
     "loginTitle": "تسجيل الدخول",
     "registerTitle": "إنشاء حساب",
+    "registerSubtitle": "انضم إلى موريزون اليوم وابدأ تجربتك الآن",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
     "name": "الاسم الكامل",
@@ -87,7 +88,13 @@
     "languageHint": "اختر لغة التطبيق",
     "lang_fr": "الفرنسية",
     "lang_en": "الإنجليزية",
-    "lang_ar": "العربية"
+    "lang_ar": "العربية",
+
+    "storeTitle": "متجرك",
+    "selectedStore": "المتجر المحدد:",
+    "storeSelected": "محدد",
+    "noStores": "ليس لديك أي متجر بعد.",
+    "createFirstStore": "أنشئ متجرك الأول"
   },
 
   "roles": {
@@ -122,5 +129,21 @@
     "checkout": "إتمام الشراء",
     "clear": "إفراغ السلة",
     "remove": "إزالة"
+  },
+  "store": {
+    "manageTitle": "إدارة متاجرك",
+    "manageSubtitle": "اعرض متاجرك وقم بإضافة متجر جديد.",
+    "yourStores": "متاجرك",
+    "openCreateModal": "إضافة متجر",
+    "createTitle": "إنشاء متجر",
+    "createSubtitle": "أضف متجرًا جديدًا إلى حسابك.",
+    "namePlaceholder": "اسم المتجر",
+    "createdTitle": "تم إنشاء المتجر",
+    "createdMessage": "تم إنشاء المتجر بنجاح.",
+    "createError": "تعذر إنشاء المتجر.",
+    "fillName": "يرجى إدخال اسم.",
+    "onlyOwner": "فقط الباعة يمكنهم إنشاء المتاجر.",
+    "noStores": "ليس لديك أي متجر بعد.",
+    "createButton": "إنشاء المتجر"
   }
 }
