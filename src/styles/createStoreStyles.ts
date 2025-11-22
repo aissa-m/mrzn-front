@@ -124,4 +124,15 @@ export const styles = StyleSheet.create({
   modalPrimaryButton: {
     marginLeft: 10,
   },
+  storeItemCardActive: {
+    borderColor: "#007AFF",
+    borderWidth: 2,
+  },
+
+  storeItemSelectedHint: {
+    marginTop: 4,
+    fontSize: 12,
+    color: "#007AFF",
+    fontWeight: "500",
+  },
 });

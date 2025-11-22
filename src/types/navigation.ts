@@ -9,9 +9,8 @@ export type RootStackParamList = {
   MainTabs: undefined;
   CreateStore: undefined;
 
-  // Productos
-  // ProductDetail: { productId: number };
-  ProductDetail: { product: Product }; // 👈 importante que sea así
+  ProductDetail: { productId?: number; product?: Product };
+
   MyProducts: undefined;
 
   // Chat
@@ -20,17 +19,15 @@ export type RootStackParamList = {
 
   // Añadir producto
   AddProduct: undefined;
-  
 };
 
 // Bottom tabs (MainTabs)
 export type MainTabsParamList = {
   Home: undefined;
-  Cart: undefined;        // 👈 nueva
-  MyProducts: undefined;  // 👈 nueva
+  Cart: undefined; // 👈 nueva
+  MyProducts: undefined; // 👈 nueva
   AddProduct: undefined;
   Messages: undefined;
   Profile: undefined;
   // CreateStore: undefined;
 };
-
