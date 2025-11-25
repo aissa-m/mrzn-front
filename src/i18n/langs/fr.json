@@ -154,5 +154,17 @@
     "noStores": "Vous n’avez pas encore de boutique.",
     "createButton": "Créer la boutique",
     "selectStoreFirst": "Veuillez d'abord choisir une boutique active."
+  },
+  "owner": {
+    "noStore": "Aucune boutique active sélectionnée.",
+    "selectStoreHint": "Veuillez sélectionner une boutique dans votre profil ou vos paramètres.",
+    "homeTitle": "Tableau de bord vendeur",
+    "currentStore": "Boutique actuelle",
+    "products": "Produits",
+    "pendingOrders": "Commandes en attente",
+    "quickActions": "Actions rapides",
+    "addProduct": "Ajouter un produit",
+    "myProducts": "Voir mes produits",
+    "chats": "Discussions avec les clients"
   }
 }

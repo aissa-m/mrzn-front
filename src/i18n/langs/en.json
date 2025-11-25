@@ -154,5 +154,18 @@
     "noStores": "You don’t have any store yet.",
     "createButton": "Create store",
     "selectStoreFirst": "Please select an active store first."
+  },
+
+  "owner": {
+    "noStore": "No active store selected.",
+    "selectStoreHint": "Please select a store in your profile or settings.",
+    "homeTitle": "Seller dashboard",
+    "currentStore": "Current store",
+    "products": "Products",
+    "pendingOrders": "Pending orders",
+    "quickActions": "Quick actions",
+    "addProduct": "Add new product",
+    "myProducts": "View my products",
+    "chats": "Customer chats"
   }
 }

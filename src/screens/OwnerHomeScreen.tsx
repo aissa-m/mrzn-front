@@ -1,12 +1,12 @@
 // src/screens/OwnerHomeScreen.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 
@@ -26,26 +26,30 @@ export default function OwnerHomeScreen() {
   const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
   const [unreadChatsCount, setUnreadChatsCount] = useState(0);
 
-  useEffect(() => {
-    const load = async () => {
-      if (!selectedStore?.id) return;
+  // 👇 función que carga los datos del dashboard
+  const load = useCallback(async () => {
+    if (!selectedStore?.id) return;
 
-      try {
-        const products = await productService.getProductsByStore(
-          selectedStore.id
-        );
-        setProductCount(products?.length || 0);
+    try {
+      const products = await productService.getProductsByStore(
+        selectedStore.id
+      );
+      setProductCount(products?.length || 0);
 
-        // TODO: cuando tengas endpoint real de orders + chats:
-        // setPendingOrdersCount(...)
-        // setUnreadChatsCount(...)
-      } catch (e) {
-        console.error("Error loading owner home data", e);
-      }
-    };
-
-    load();
+      // TODO: cuando tengas endpoint real de orders + chats:
+      // setPendingOrdersCount(...)
+      // setUnreadChatsCount(...)
+    } catch (e) {
+      console.error("Error loading owner home data", e);
+    }
   }, [selectedStore?.id]);
+
+  // 👇 se ejecuta cada vez que la pantalla entra en foco
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load])
+  );
 
   if (!selectedStore) {
     return (
@@ -146,19 +150,7 @@ export default function OwnerHomeScreen() {
             {t("owner.chats", "Customer chats")}
           </Text>
         </TouchableOpacity>
-
-        {/* Más adelante: pedidos */}
-        {/* <TouchableOpacity
-          style={homeStyles.secondaryButton}
-          onPress={() => navigation.navigate("Orders")}
-        >
-          <Text style={homeStyles.secondaryButtonText}>
-            {t("owner.orders", "Orders")}
-          </Text>
-        </TouchableOpacity> */}
       </View>
-
-      {/* Aquí más adelante: últimos chats, últimos pedidos, stats simples, etc. */}
     </ScrollView>
   );
 }

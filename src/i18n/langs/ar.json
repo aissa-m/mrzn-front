@@ -154,5 +154,18 @@
     "noStores": "ليس لديك أي متجر بعد.",
     "createButton": "إنشاء المتجر",
     "selectStoreFirst": "يرجى اختيار متجر نشط أولاً."
+  },
+
+  "owner": {
+    "noStore": "لا يوجد متجر نشط محدد.",
+    "selectStoreHint": "يرجى اختيار متجر من الملف الشخصي أو الإعدادات.",
+    "homeTitle": "لوحة تحكم البائع",
+    "currentStore": "المتجر الحالي",
+    "products": "المنتجات",
+    "pendingOrders": "الطلبات المعلقة",
+    "quickActions": "إجراءات سريعة",
+    "addProduct": "إضافة منتج جديد",
+    "myProducts": "عرض منتجاتي",
+    "chats": "محادثات العملاء"
   }
 }
