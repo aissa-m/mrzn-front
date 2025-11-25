@@ -83,6 +83,7 @@
     "myProductsHint": "Voir, modifier et supprimer vos produits",
 
     "logout": "Se déconnecter",
+    "goLogin": "Se connecter",
 
     "language": "Langue",
     "languageHint": "Choisissez la langue de l'application",
@@ -94,7 +95,14 @@
     "selectedStore": "Boutique sélectionnée :",
     "storeSelected": "sélectionnée",
     "noStores": "Vous n’avez pas encore de boutique.",
-    "createFirstStore": "Créez votre première boutique"
+    "createFirstStore": "Créez votre première boutique",
+
+    "avatar": {
+      "permissionDenied": "Permission refusée",
+      "permissionExplain": "Vous devez autoriser l’accès à la galerie pour changer l’avatar.",
+      "updated": "Avatar mis à jour!",
+      "updateError": "Erreur lors de la mise à jour"
+    }
   },
 
   "roles": {
@@ -146,5 +154,17 @@
     "noStores": "Vous n’avez pas encore de boutique.",
     "createButton": "Créer la boutique",
     "selectStoreFirst": "Veuillez d'abord choisir une boutique active."
+  },
+  "owner": {
+    "noStore": "Aucune boutique active sélectionnée.",
+    "selectStoreHint": "Veuillez sélectionner une boutique dans votre profil ou vos paramètres.",
+    "homeTitle": "Tableau de bord vendeur",
+    "currentStore": "Boutique actuelle",
+    "products": "Produits",
+    "pendingOrders": "Commandes en attente",
+    "quickActions": "Actions rapides",
+    "addProduct": "Ajouter un produit",
+    "myProducts": "Voir mes produits",
+    "chats": "Discussions avec les clients"
   }
 }

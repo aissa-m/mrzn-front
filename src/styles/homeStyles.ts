@@ -7,7 +7,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-
   },
 
   header: {
@@ -56,5 +55,30 @@ export const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 13,
     fontWeight: "500",
+  },
+  // en src/styles/homeStyles.ts
+  primaryButton: {
+    backgroundColor: "#007AFF",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  primaryButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  secondaryButton: {
+    backgroundColor: "#fff",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  secondaryButtonText: {
+    color: "#333",
+    fontWeight: "500",
+    fontSize: 15,
   },
 });

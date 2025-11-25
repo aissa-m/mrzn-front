@@ -1,5 +1,5 @@
 // src/screens/MyProductsScreen.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../hooks/useAuth";
 import { productService } from "../services/products";
 import { styles } from "../styles/myProdsStyles";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { API_BASE } from "@env";
@@ -26,25 +26,29 @@ export default function MyProductsScreen() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const load = async () => {
-      if (!isStoreOwner || !selectedStore?.id) {
-        setLoading(false);
-        return;
-      }
+  const load = useCallback(async () => {
+    if (!isStoreOwner || !selectedStore?.id) {
+      setLoading(false);
+      return;
+    }
 
-      try {
-        const res = await productService.getProductsByStore(selectedStore.id);
-        setProducts(res || []);
-      } catch (e) {
-        console.error("Error loading products", e);
-      } finally {
-        setLoading(false);
-      }
-    };
+    try {
+      setLoading(true);
+      const res = await productService.getProductsByStore(selectedStore.id);
+      setProducts(res || []);
+    } catch (e) {
+      console.error("Error loading products", e);
+    } finally {
+      setLoading(false);
+    }
+  }, [isStoreOwner, selectedStore?.id]);
 
-    load();
-  }, [selectedStore, isStoreOwner]);
+  // 👇 Se ejecuta cada vez que la pantalla gana foco
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load])
+  );
 
   const getImageUrl = (p: any) => {
     const firstImage = p.images?.[0];
@@ -55,8 +59,7 @@ export default function MyProductsScreen() {
   };
 
   const handleOpenProduct = (productId: number) => {
-    // Reutilizamos la pantalla de detalle general
-    navigation.navigate("ProductDetail", { productId /*, fromOwner: true */ });
+    navigation.navigate("ProductDetail", { productId });
   };
 
   return (
@@ -101,7 +104,8 @@ export default function MyProductsScreen() {
           <View style={styles.centerBox}>
             <Text style={styles.title}>{t("myProducts.title")}</Text>
             <Text style={styles.message}>
-              {t("myProducts.empty", "Aucun produit dans cette boutique.")}
+              {t("myProducts.empty", "Aucun produit dans cette boutique.")
+              }
             </Text>
           </View>
         )}

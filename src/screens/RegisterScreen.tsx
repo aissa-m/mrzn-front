@@ -8,6 +8,9 @@ import {
   Alert,
   ActivityIndicator,
   Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -17,8 +20,6 @@ import { styles } from "../styles/loginStyles";
 import { RootStackParamList } from "../types/navigation";
 import { useTranslation } from "react-i18next";
 import Logo from "../../assets/logo_n.png";
-
-
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
@@ -48,7 +49,6 @@ export default function RegisterScreen() {
         t("auth.registerSuccess", "Compte créé avec succès !")
       );
 
-      // Après inscription, aller à la zone principale (tabs)
       navigation.reset({
         index: 0,
         routes: [{ name: "MainTabs" }],
@@ -65,56 +65,66 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={Logo} style={styles.logo} resizeMode="contain" />
-
-      <Text style={styles.title}>{t("auth.registerTitle")} 🛒</Text>
-      <Text style={styles.subtitle}>{t("auth.registerSubtitle")}</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder={t("auth.name")}
-        value={name}
-        onChangeText={setName}
-        editable={!loading}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder={t("auth.email")}
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        editable={!loading}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder={t("auth.password")}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        editable={!loading}
-      />
-
-      <TouchableOpacity
-        style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={handleRegister}
-        disabled={loading}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>{t("auth.registerButton")}</Text>
-        )}
-      </TouchableOpacity>
+        <Image source={Logo} style={styles.logo} resizeMode="contain" />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Text style={styles.link}>
-          {t("auth.haveAccount")} {t("auth.goLogin")}
-        </Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={styles.title}>{t("auth.registerTitle")} 🛒</Text>
+        <Text style={styles.subtitle}>{t("auth.registerSubtitle")}</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder={t("auth.name")}
+          value={name}
+          onChangeText={setName}
+          editable={!loading}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder={t("auth.email")}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          editable={!loading}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder={t("auth.password")}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          editable={!loading}
+        />
+
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleRegister}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>{t("auth.registerButton")}</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.link}>
+            {t("auth.haveAccount")} {t("auth.goLogin")}
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

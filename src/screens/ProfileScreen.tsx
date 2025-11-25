@@ -118,6 +118,8 @@ export default function ProfileScreen() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      console.log("avatar updated response:", res.data); 
+
       setUser(res.data);
       Alert.alert("Succès", t("avatar.updated"));
     } catch (err) {
@@ -152,6 +154,7 @@ export default function ProfileScreen() {
 
   const avatarUri = getAvatarUri();
   const isOwnerOrAdmin = user?.role === "STORE_OWNER" || user?.role === "ADMIN";
+  const isLoggedIn = !!user;
 
   return (
     <View style={styles.container}>
@@ -275,18 +278,27 @@ export default function ProfileScreen() {
               style={{ marginTop: 12 }}
               onPress={() => navigation.navigate("CreateStore")}
             >
-              <Text style={{ color: "#007AFF" }}>
-                {t("store.manageTitle")}
-              </Text>
+              <Text style={{ color: "#007AFF" }}>{t("store.manageTitle")}</Text>
             </TouchableOpacity>
           </View>
         )}
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-          <Text style={styles.logoutText}>{t("profile.logout")}</Text>
-        </TouchableOpacity>
+        {isLoggedIn ? (
+          <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+            <Text style={styles.logoutText}>{t("profile.logout")}</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.loginText}>
+              {t("profile.goLogin")} {/* o t("auth.loginTitle") si prefieres */}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

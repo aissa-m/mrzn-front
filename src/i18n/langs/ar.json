@@ -83,6 +83,7 @@
     "myProductsHint": "عرض وتعديل وحذف منتجاتك",
 
     "logout": "تسجيل الخروج",
+    "goLogin": "تسجيل الدخول",
 
     "language": "اللغة",
     "languageHint": "اختر لغة التطبيق",
@@ -94,7 +95,14 @@
     "selectedStore": "المتجر المحدد:",
     "storeSelected": "محدد",
     "noStores": "ليس لديك أي متجر بعد.",
-    "createFirstStore": "أنشئ متجرك الأول"
+    "createFirstStore": "أنشئ متجرك الأول",
+
+    "avatar": {
+      "permissionDenied": "تم رفض الإذن",
+      "permissionExplain": "يجب السماح بالوصول للمعرض لتغيير الصورة.",
+      "updated": "تم تحديث الصورة!",
+      "updateError": "حدث خطأ أثناء التحديث"
+    }
   },
 
   "roles": {
@@ -146,5 +154,18 @@
     "noStores": "ليس لديك أي متجر بعد.",
     "createButton": "إنشاء المتجر",
     "selectStoreFirst": "يرجى اختيار متجر نشط أولاً."
+  },
+
+  "owner": {
+    "noStore": "لا يوجد متجر نشط محدد.",
+    "selectStoreHint": "يرجى اختيار متجر من الملف الشخصي أو الإعدادات.",
+    "homeTitle": "لوحة تحكم البائع",
+    "currentStore": "المتجر الحالي",
+    "products": "المنتجات",
+    "pendingOrders": "الطلبات المعلقة",
+    "quickActions": "إجراءات سريعة",
+    "addProduct": "إضافة منتج جديد",
+    "myProducts": "عرض منتجاتي",
+    "chats": "محادثات العملاء"
   }
 }
