@@ -23,7 +23,8 @@ export default function MainTabs() {
   const isOwnerOrAdmin =
     user && (user.role === "STORE_OWNER" || user.role === "ADMIN");
 
-  const isBuyer = user && user.role === "USER";
+  // 👇 guest (sin user) + USER = comprador
+  const isBuyer = !user || user.role === "USER";
 
   return (
     <Tab.Navigator
@@ -77,11 +78,10 @@ export default function MainTabs() {
         }}
       />
 
-      {/* CART – solo usuarios compradores (ROLE: USER) */}
+      {/* CART – guest + usuarios compradores (USER), nunca owners/admin */}
       {isBuyer && (
         <Tab.Screen
           name="Cart"
-          // TODO: crea CartScreen y cámbialo aquí
           component={CartScreen}
           options={{
             title: t("tabs.cart"),

@@ -83,6 +83,7 @@
     "myProductsHint": "View, edit and delete your products",
 
     "logout": "Log out",
+    "goLogin": "Login",
 
     "language": "Language",
     "languageHint": "Choose the app language",
@@ -94,7 +95,14 @@
     "selectedStore": "Selected store:",
     "storeSelected": "selected",
     "noStores": "You don't have any store yet.",
-    "createFirstStore": "Create your first store"
+    "createFirstStore": "Create your first store",
+
+    "avatar": {
+      "permissionDenied": "Permission denied",
+      "permissionExplain": "You must allow gallery access to change your avatar.",
+      "updated": "Avatar updated!",
+      "updateError": "Error updating avatar"
+    }
   },
 
   "roles": {

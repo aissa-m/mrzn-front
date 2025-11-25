@@ -99,4 +99,15 @@ export const styles = StyleSheet.create({
   langBtnText: {
     fontSize: 13,
   },
+  loginBtn: {
+    backgroundColor: "#007AFF",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  loginText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
 });

@@ -16,9 +16,11 @@ import AddProductScreen from "../screens/AddProductScreen";
 import ChatsListScreen from "../screens/ChatsListScreen";
 import ChatScreen from "../screens/ChatScreen";
 
-import { RootStackParamList } from "../types/navigation";
 // Stores
 import CreateStoreScreen from "../screens/CreateStoreScreen";
+
+import SplashScreen from "../screens/SplashScreen"; // 👈 NUEVO
+import { RootStackParamList } from "../types/navigation";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,7 +28,14 @@ export default function AppNavigator() {
   const { t } = useTranslation();
 
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Splash">
+      {/* Splash */}
+      <Stack.Screen
+        name="Splash"
+        component={SplashScreen}
+        options={{ headerShown: false }}
+      />
+
       {/* Auth */}
       <Stack.Screen
         name="Login"
@@ -40,7 +49,7 @@ export default function AppNavigator() {
         options={{ title: t("auth.registerTitle") }}
       />
 
-      {/* Área principal tras login: tabs (Accueil / Home, Messages, Profil, etc.) */}
+      {/* Área principal */}
       <Stack.Screen
         name="MainTabs"
         component={MainTabs}
@@ -53,7 +62,6 @@ export default function AppNavigator() {
         component={ProductDetailScreen}
         options={{ title: t("productDetail.title") }}
       />
-
       <Stack.Screen
         name="MyProducts"
         component={MyProductsScreen}
@@ -66,7 +74,6 @@ export default function AppNavigator() {
         component={ChatsListScreen}
         options={{ title: t("chat.listTitle") }}
       />
-
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
@@ -75,7 +82,7 @@ export default function AppNavigator() {
         })}
       />
 
-      {/* AddProduct también como screen independiente (por si navegas fuera de tabs) */}
+      {/* AddProduct / Store */}
       <Stack.Screen
         name="AddProduct"
         component={AddProductScreen}
@@ -85,7 +92,7 @@ export default function AppNavigator() {
       <Stack.Screen
         name="CreateStore"
         component={CreateStoreScreen}
-        options={{ title: "Create store" }} // el título lo manejas luego con i18n si quieres
+        options={{ title: "Create store" }}
       />
     </Stack.Navigator>
   );

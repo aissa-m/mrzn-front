@@ -14,11 +14,11 @@ import * as ImagePicker from "expo-image-picker";
 import { productService } from "../services/products";
 import { useTranslation } from "react-i18next";
 import { styles } from "../styles/newProdStyles";
-import { useAuth } from "../hooks/useAuth"; // 👈 NUEVO
+import { useAuth } from "../hooks/useAuth";
 
 export default function AddProductScreen() {
   const { t } = useTranslation();
-  const { selectedStore, isStoreOwner } = useAuth(); // 👈 NUEVO
+  const { selectedStore, isStoreOwner } = useAuth();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -68,6 +68,7 @@ export default function AddProductScreen() {
   };
 
   const handleSubmit = async () => {
+    console.log("Submitting product:", { name, description, price, images });
     if (!name || !price) {
       Alert.alert("Erreur", t("addProduct.needNamePrice"));
       return;
@@ -97,7 +98,7 @@ export default function AddProductScreen() {
         name,
         description,
         price: Number(price),
-        storeId: selectedStore.id, // 👈 AHORA USA LA TIENDA ACTUAL
+        storeId: selectedStore.id,
         images,
       });
 
@@ -118,7 +119,6 @@ export default function AddProductScreen() {
     }
   };
 
-  // 👇 NUEVO: si no es owner, mostrar mensaje
   if (!isStoreOwner) {
     return (
       <View style={styles.container}>
@@ -134,7 +134,7 @@ export default function AddProductScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={[styles.container, { paddingBottom: 32 }]} // pequeño ajuste de layout
+      contentContainerStyle={[styles.container, { paddingBottom: 32 }]}
     >
       <View style={{ width: "100%", maxWidth: 500, alignSelf: "center" }}>
         <Text style={styles.title}>{t("addProduct.title")}</Text>
