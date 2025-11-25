@@ -19,7 +19,8 @@ import { useTranslation } from "react-i18next";
 export default function CreateStoreScreen() {
   const { t } = useTranslation();
   const navigation = useNavigation<any>();
-  const { isStoreOwner, refreshUser, user } = useAuth();
+  const { isStoreOwner, refreshUser, user, selectedStore, setSelectedStore } =
+    useAuth();
 
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -89,11 +90,28 @@ export default function CreateStoreScreen() {
         contentContainerStyle={{ paddingBottom: 24 }}
       >
         {Array.isArray(user?.stores) && user.stores.length > 0 ? (
-          user.stores.map((store) => (
-            <View key={store.id} style={styles.storeItemCard}>
-              <Text style={styles.storeItemName}>{store.name}</Text>
-            </View>
-          ))
+          user.stores.map((store) => {
+            const isActive = selectedStore?.id === store.id;
+
+            return (
+              <TouchableOpacity
+                key={store.id}
+                style={[
+                  styles.storeItemCard,
+                  isActive && styles.storeItemCardActive,
+                ]}
+                onPress={() => setSelectedStore(store)}
+              >
+                <Text style={styles.storeItemName}>{store.name}</Text>
+
+                {isActive && (
+                  <Text style={styles.storeItemSelectedHint}>
+                    {t("profile.storeSelected", "sélectionnée")}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            );
+          })
         ) : (
           <Text style={styles.itemHint}>
             {t("store.noStores", "Vous n’avez pas encore de boutique.")}

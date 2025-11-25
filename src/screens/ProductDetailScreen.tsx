@@ -1,23 +1,23 @@
 // src/screens/ProductDetailScreen.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Alert,
   Image,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 
 import { Product, RootStackParamList } from "../types";
 import { chatService } from "../services/chat";
+import { productService } from "../services/products";
+import { styles } from "../styles/prodDetailStyles";
+import { API_BASE } from "@env";
+import { useAuth } from "../hooks/useAuth";
 
-const { width } = Dimensions.get("window");
-const IMAGE_HEIGHT = width * 0.8;
 const PLACEHOLDER =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmiqR_gB1aE6SmGpJvgdi6j6MZYtLpcSittA&s";
 
@@ -25,26 +25,110 @@ export default function ProductDetailScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RootStackParamList, "ProductDetail">>();
   const { t } = useTranslation();
+  const { user, isStoreOwner, selectedStore } = useAuth();
 
-  const { product } = route.params;
+  const paramProduct = route.params?.product;
+  const paramProductId = route.params?.productId ?? paramProduct?.id;
 
-  const allImages =
-    product.images && product.images.length > 0
-      ? product.images
-      : [product.mainImage || PLACEHOLDER];
-
-  const [currentImage, setCurrentImage] = useState(
-    product.mainImage || allImages[0] || PLACEHOLDER
+  const [product, setProduct] = useState<Product | null>(
+    (paramProduct as Product) || null
   );
+  const [allImages, setAllImages] = useState<string[]>([]);
+  const [currentImage, setCurrentImage] = useState<string>(PLACEHOLDER);
+  const [loading, setLoading] = useState(!paramProduct); // si viene product, cargamos más rápido
+
+  // función para normalizar las imágenes
+  const prepareImages = (data: any): string[] => {
+    const urls: string[] = [];
+
+    if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+      for (const img of data.images as any[]) {
+        if (typeof img === "string") {
+          urls.push(img);
+        } else if (img?.url) {
+          const url: string = img.url;
+          if (url.startsWith("http")) {
+            urls.push(url);
+          } else {
+            urls.push(`${API_BASE.replace(/\/$/, "")}${url}`);
+          }
+        }
+      }
+    }
+
+    if (urls.length === 0 && (data as any).mainImage) {
+      urls.push((data as any).mainImage);
+    }
+
+    if (urls.length === 0) {
+      urls.push(PLACEHOLDER);
+    }
+
+    return urls;
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    const load = async () => {
+      try {
+        let finalProduct: any = paramProduct || null;
+
+        // si no viene el producto, pero sí el id → lo pedimos
+        if (!finalProduct && paramProductId) {
+          finalProduct = await productService.getProductById(paramProductId);
+        }
+
+        // si viene producto y además tenemos id → podemos refrescar
+        if (paramProduct && paramProduct.id) {
+          try {
+            const fresh = await productService.getProductById(paramProduct.id);
+            if (fresh) finalProduct = fresh;
+          } catch {
+            // si falla el refresh, nos quedamos con el paramProduct
+          }
+        }
+
+        if (!mounted) return;
+
+        if (!finalProduct) {
+          setProduct(null);
+          return;
+        }
+
+        setProduct(finalProduct);
+
+        const urls = prepareImages(finalProduct);
+        setAllImages(urls);
+        setCurrentImage(urls[0] || PLACEHOLDER);
+      } catch (err) {
+        console.error("Error loading product", err);
+        if (mounted) {
+          Alert.alert(
+            t("common.error"),
+            t("productDetail.errorLoad", "Impossible de charger le produit.")
+          );
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [paramProductId, paramProduct, t]);
 
   const handleChat = async () => {
+    if (!product) return;
+
     try {
       const convo = await chatService.openConversation(
-        (product as any).ownerId, // TODO: pon ownerId en el tipo Product cuando lo tengas
+        (product as any).ownerId, // TODO: añade ownerId al tipo Product cuando lo tengas
         product.storeId
       );
 
-      // 👇 usamos la firma del stack: Chat: { chatId: string; title?: string }
       navigation.navigate("Chat", {
         chatId: String(convo.id),
         title: product.name,
@@ -57,6 +141,100 @@ export default function ProductDetailScreen() {
       );
     }
   };
+
+  const handleDelete = () => {
+    if (!product) return;
+
+    Alert.alert(
+      t("common.confirm"),
+      t(
+        "myProducts.confirmDelete",
+        "Voulez-vous vraiment supprimer ce produit ?"
+      ),
+      [
+        {
+          text: t("common.cancel", "Annuler"),
+          style: "cancel",
+        },
+        {
+          text: t("myProducts.delete", "Supprimer"),
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await productService.deleteProduct(product.id);
+              Alert.alert(
+                t("myProducts.deletedTitle", "Produit supprimé"),
+                t(
+                  "myProducts.deletedMessage",
+                  "Le produit a été supprimé avec succès."
+                )
+              );
+              navigation.goBack();
+            } catch (err) {
+              console.error(err);
+              Alert.alert(
+                t("common.error"),
+                t(
+                  "myProducts.deleteError",
+                  "Impossible de supprimer le produit."
+                )
+              );
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleEdit = () => {
+    // aquí luego podemos navegar a una pantalla de edición
+    Alert.alert("TODO", "Édition du produit à implémenter.");
+  };
+
+  const getPriceText = () => {
+    if (!product) return "";
+    const raw: any = (product as any).price;
+    let n: number | null = null;
+
+    if (typeof raw === "number") {
+      n = raw;
+    } else if (raw && typeof raw === "object" && typeof raw.toNumber === "function") {
+      n = raw.toNumber();
+    } else {
+      const maybe = Number(raw);
+      if (!isNaN(maybe)) n = maybe;
+    }
+
+    return n !== null ? `${n.toFixed(2)} MRU` : "";
+  };
+
+  const canManage =
+    isStoreOwner &&
+    product &&
+    selectedStore &&
+    selectedStore.id === product.storeId;
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Text style={styles.name}>{t("common.loading")}</Text>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  if (!product) {
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Text style={styles.name}>
+            {t("productDetail.errorLoad", "Produit introuvable.")}
+          </Text>
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -75,15 +253,15 @@ export default function ProductDetailScreen() {
             showsHorizontalScrollIndicator={false}
             style={styles.thumbRow}
           >
-            {allImages.map((img, idx) => (
+            {allImages.map((img: string, idx: number) => (
               <TouchableOpacity key={idx} onPress={() => setCurrentImage(img)}>
-              <Image
-                source={{ uri: img }}
-                style={[
-                  styles.thumb,
-                  img === currentImage && styles.thumbActive,
-                ]}
-              />
+                <Image
+                  source={{ uri: img }}
+                  style={[
+                    styles.thumb,
+                    img === currentImage && styles.thumbActive,
+                  ]}
+                />
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -92,9 +270,7 @@ export default function ProductDetailScreen() {
         {/* Info producto */}
         <View style={styles.infoBox}>
           <Text style={styles.name}>{product.name}</Text>
-          <Text style={styles.price}>
-            {product.price.toFixed(2)} MRU
-          </Text>
+          <Text style={styles.price}>{getPriceText()}</Text>
 
           {product.description ? (
             <Text style={styles.desc}>{product.description}</Text>
@@ -105,7 +281,7 @@ export default function ProductDetailScreen() {
           )}
         </View>
 
-        {/* Info vendedor (placeholder por ahora) */}
+        {/* Info vendedor (simple por ahora) */}
         <View style={styles.sellerBox}>
           <Text style={styles.sellerLabel}>
             {t("productDetail.sellerLabel")}
@@ -119,8 +295,37 @@ export default function ProductDetailScreen() {
         <View style={{ height: 90 }} />
       </ScrollView>
 
-      {/* CTA fijo abajo, tipo Vinted/Wallapop */}
+      {/* Footer: acciones owner + chat */}
       <View style={styles.footer}>
+        {canManage && (
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 8,
+              marginBottom: 8,
+              width: "100%",
+            }}
+          >
+            <TouchableOpacity
+              style={[styles.chatButton, { backgroundColor: "#111827", flex: 1 }]}
+              onPress={handleEdit}
+            >
+              <Text style={styles.chatButtonText}>
+                {t("myProducts.edit", "Modifier")}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.chatButton, { backgroundColor: "#b91c1c", flex: 1 }]}
+              onPress={handleDelete}
+            >
+              <Text style={styles.chatButtonText}>
+                {t("myProducts.delete", "Supprimer")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <TouchableOpacity style={styles.chatButton} onPress={handleChat}>
           <Text style={styles.chatButtonText}>
             {t("productDetail.contactSeller")} 💬
@@ -130,105 +335,3 @@ export default function ProductDetailScreen() {
     </View>
   );
 }
-
-// 🎨 ESTILOS
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f9fafb",
-  },
-  scrollContent: {
-    padding: 16,
-  },
-  mainImage: {
-    width: "100%",
-    height: IMAGE_HEIGHT,
-    borderRadius: 12,
-    backgroundColor: "#e5e7eb",
-  },
-  thumbRow: {
-    marginTop: 8,
-  },
-  thumb: {
-    width: 70,
-    height: 70,
-    borderRadius: 8,
-    marginRight: 8,
-    backgroundColor: "#e5e7eb",
-  },
-  thumbActive: {
-    borderWidth: 2,
-    borderColor: "#007AFF",
-  },
-  infoBox: {
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    elevation: 2,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 4,
-  },
-  price: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#16a34a",
-    marginBottom: 8,
-  },
-  desc: {
-    fontSize: 14,
-    color: "#374151",
-    marginTop: 4,
-  },
-  descMuted: {
-    fontSize: 14,
-    color: "#9ca3af",
-    marginTop: 4,
-  },
-  sellerBox: {
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    elevation: 2,
-  },
-  sellerLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#6b7280",
-  },
-  sellerName: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginTop: 4,
-  },
-  sellerHint: {
-    fontSize: 13,
-    color: "#6b7280",
-    marginTop: 4,
-  },
-  footer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    padding: 12,
-    backgroundColor: "#ffffffee",
-    borderTopWidth: 1,
-    borderTopColor: "#e5e7eb",
-  },
-  chatButton: {
-    backgroundColor: "#007AFF",
-    paddingVertical: 12,
-    borderRadius: 999,
-    alignItems: "center",
-  },
-  chatButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-});

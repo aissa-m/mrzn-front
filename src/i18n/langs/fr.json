@@ -144,6 +144,7 @@
     "fillName": "Veuillez saisir un nom.",
     "onlyOwner": "Seuls les vendeurs peuvent créer des boutiques.",
     "noStores": "Vous n’avez pas encore de boutique.",
-    "createButton": "Créer la boutique"
+    "createButton": "Créer la boutique",
+    "selectStoreFirst": "Veuillez d'abord choisir une boutique active."
   }
 }

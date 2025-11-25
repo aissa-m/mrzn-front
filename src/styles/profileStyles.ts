@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
     gap: 16,
     alignItems: "center",
     marginBottom: 24,
-    marginTop: 35,
   },
   avatar: {
     width: 72,
